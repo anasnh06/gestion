@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <div class="row justify-content-center mb-5">
+        <div class="col-md-8 text-center">
+          <h1 class="display-4 font-weight-bold text mb-4">{{ activite.libelle }}</h1>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title"><i class="fas fa-info-circle"></i> Informations sur l'activité</h5>
+              <p class="card-text"><i class="fas fa-tasks"></i> Type d'activité : {{ activite.type_activite }}</p>
+              <p class="card-text"><i class="far fa-calendar-alt"></i> Date de début : {{ activite.date_debut }}</p>
+              <p class="card-text"><i class="far fa-calendar-alt"></i> Date de fin : {{ activite.date_fin }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title"><i class="fas fa-users"></i> Équipes participant à l'activité ({{ activite.equipes.all|length }})</h5>
+              <ul class="list-unstyled">
+                {% for equipe in activite.equipes.all %}
+                <li>{{ equipe.intitule }} --- <a href="{% url 'equipe_detail' equipe.id %}">Détails</a></li>
+                {% empty %}
+                  <li>Aucune équipe trouvée.</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title"><i class="fas fa-image"></i> Photo</h5>
+              <img src="{{ activite.photo.url }}" class="img-fluid rounded-circle" alt="{{ activite.libelle }}">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title"><i class="fas fa-file"></i> Fichier</h5>
+              {% if activite.fichier %}
+                <a href="{{ activite.fichier.url }}" class="btn btn-primary">Télécharger le fichier</a>
+              {% else %}
+                <p>Aucun fichier disponible.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title"><i class="fas fa-align-left"></i> Description</h5>
+              <p class="card-text">{{ activite.information }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+{% endblock %}

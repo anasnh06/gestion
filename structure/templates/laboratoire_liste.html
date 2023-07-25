@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <div class="row justify-content-center mb-5">
+        <div class="col-md-8 text-center">
+          <hr>
+          <h1 class="display-4 font-weight-bold text mb-4">Laboratoires</h1>
+          <hr>
+        </div>
+      </div>
+      {% if laboratoires_page %}
+      <div class="row justify-content-center">
+          {% for labo in laboratoires_page %}
+            <div class="col-md-4">
+              <div class="card mb-6">
+                <img src="{{ labo.photo.url }}" class="card-img-top" width="50" height="200" alt="{{ labo }}">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title align-self-center">{{ labo.alias }}</h5>
+                  <div class="card-text" style="height: 100px; overflow: auto;">
+                    <p class="mb-0 text-center">{{ labo.intitule }}</p>
+                  </div>
+                  <div class="card-text d-flex align-items-center" style="height: 50px; overflow: auto;">
+                    <h6 class="font-weight-bold mb-0 mr-2">Département :</h6>
+                    <p class="mb-0 text-center">{{ labo.departement }}</p>
+                  </div>
+                  <div class="card-text d-flex align-items-center" style="height: 50px; overflow: auto;">
+                    <h6 class="font-weight-bold mb-0 mr-2">Date de création :</h6>
+                    <p class="mb-0 text-center">{{ labo.date_creation|date:"d F Y" }}</p>
+                  </div>
+                  <div class="mt-auto text-center">
+                    <a href="{% url 'laboratoire_detail' labo.id %}" class="btn btn-primary stretched-link">En savoir plus</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <br>
+        <hr>
+        <nav aria-label="Pagination">
+          <ul class="pagination">
+            {% if laboratoires_page.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ laboratoires_page.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.departement %}&departement={{ request.GET.departement }}{% endif %}" aria-label="Précédent">
+                  <span aria-hidden="true">&laquo;</span>
+                  <span class="sr-only">Précédent</span>
+                </a>
+              </li>
+            {% endif %}
+            {% for num in laboratoires_page.paginator.page_range %}
+              {% if laboratoires_page.number == num %}
+                <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+              {% elif num > laboratoires_page.number|add:'-3' and num < laboratoires_page.number|add:'3' %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.departement %}&departement={{ request.GET.departement }}{% endif %}">{{ num }}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if laboratoires_page.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ laboratoires_page.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.departement %}&departement={{ request.GET.departement }}{% endif %}" aria-label="Suivant">
+                  <span aria-hidden="true">&raquo;</span>
+                  <span class="sr-only">Suivant</span>
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% else %}
+        <p class="text-center">Aucun laboratoire trouvé.</p>
+      {% endif %}
+      <hr>
+      <form method="GET" action="{% url 'laboratoire_liste' %}" class="search-form">
+        <div class="form-row">
+          <div class="col-md-4 mb-3">
+            <div class="form-group">
+              <label for="search">Rechercher par nom :</label>
+              <input type="text" name="search" class="form-control" id="search" placeholder="Entrez le nom du labo">
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="form-group">
+              <label for="departement">Filtrer par département :</label>
+              <select name="departement" class="custom-select" id="departement">
+                <option value="" {% if not request.GET.departement %}selected{% endif %}>Tous les départements</option>
+                {% for dept in departements %}
+                  <option value="{{ dept.departement }}" {% if request.GET.departement == dept.departement %}selected{% endif %}>{{ dept.departement }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary " id="button-rechercher">Rechercher/Filtrer</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <hr>
+  </section>
+{% endblock %}
+{% block styles %}
+  {{ block.super }}
+  <style>
+    .card {
+      height: 500px;
+      border: none;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease-in-out;
+    }
+    
+    .card:hover {
+      transform: translateY(-10px);
+    }
+    
+    .search-form .form-group {
+      margin-bottom: 0;
+    }
+    
+    .search-form .form-group label {
+      font-weight: bold;
+    }
+    
+    .search-form .form-group select {
+      width: 100%;
+    }
+    
+    .search-form .form-group input[type="text"] {
+      width: 100%;
+    }
+    
+    .search-form .form-group button[type="submit"] {
+      margin-top: 1rem;
+      width: 100%;
+    }
+    
+    .pagination {
+      justify-content: center;
+    }
+    
+  </style>
+{% endblock %}

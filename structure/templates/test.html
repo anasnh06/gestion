@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <h1 class="text-center mb-5">Liste des Enseignants</h1>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>
+                  <a href="?tri=nom&sens={{ sens_inverse|default:'asc' }}">
+                    {% if tri == 'nom' %}
+                      {% if sens == 'asc' %}&uarr;{% else %}&darr;{% endif %}
+                    {% endif %}
+                    Nom
+                  </a>
+                </th>
+                <th>
+                  <a href="?tri=prenom&sens={{ sens_inverse|default:'asc' }}">
+                    {% if tri == 'prenom' %}
+                      {% if sens == 'asc' %}&uarr;{% else %}&darr;{% endif %}
+                    {% endif %}
+                    Prénom
+                  </a>
+                </th>
+                <th>
+                  <a href="?tri=grade&sens={{ sens_inverse|default:'asc' }}">
+                    {% if tri == 'grade' %}
+                      {% if sens == 'asc' %}&uarr;{% else %}&darr;{% endif %}
+                    {% endif %}
+                    Grade
+                  </a>
+                </th>
+                <th>
+                  <a href="?tri=labo__alias&sens={{ sens_inverse|default:'asc' }}">
+                    {% if tri == 'labo__alias' %}
+                      {% if sens == 'asc' %}&uarr;{% else %}&darr;{% endif %}
+                    {% endif %}
+                    Laboratoire
+                  </a>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for enseignant in enseignants %}
+                <tr>
+                  <td><a href="{% url 'chercheurEns_detail' enseignant.id %}">{{ enseignant.nom }}</a></td>
+                  <td>{{ enseignant.prenom }}</td>
+                  <td>{{ enseignant.grade }}</td>
+                  <td>{% if enseignant.labo %}
+                    <a href="{% url 'laboratoire_detail' enseignant.labo.id %}">{{ enseignant.labo.alias }}</a>
+                    {% else %}
+                    -
+                    {% endif %}</td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="4">Aucun enseignant trouvé.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>  
+    </div>
+  </section>
+{% endblock %}

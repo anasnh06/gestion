@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <div class="row justify-content-center mb-5">
+        <div class="col-md-8 text-center">
+          <h1 class="display-4 font-weight-bold text mb-4">{{ production.libelle }}</h1>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title"><i class="fas fa-info-circle"></i> Informations sur la production</h5>
+              <p class="card-text"><i class="fas fa-file-alt"></i> Type de publication : {{ production.type_publication }}</p>
+              <p class="card-text"><i class="far fa-calendar-alt"></i> Date de publication : {{ production.date_publication }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title"><i class="fas fa-user"></i> Auteurs ({{ production.auteurs.all|length }})</h5>
+              <ul class="list-unstyled">
+                {% for auteur in production.auteurs.all %}
+                  <li><a href="{% url 'chercheur_detail' auteur.id %}">{{ auteur }}</a>{{ auteur.grade }}</li>
+                {% empty %}
+                  <li>Aucun auteur trouvé.</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title"><i class="fas fa-image"></i> Photo</h5>
+              <img src="{{ production.photo.url }}" class="img-fluid rounded-circle" alt="{{ production.libelle }}">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title"><i class="fas fa-file"></i> Fichier</h5>
+              {% if production.fichier %}
+                <a href="{{ production.fichier.url }}" class="btn btn-primary">Télécharger le fichier</a>
+              {% else %}
+                <p>Aucun fichier disponible.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title"><i class="fas fa-align-left"></i> Description</h5>
+              <p class="card-text">{{ production.information }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+{% endblock %}

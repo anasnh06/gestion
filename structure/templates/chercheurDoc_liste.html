@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <h1 class="text-center mb-5">Chercheurs Doctorants</h1>
+
+    <form method="get" action="{% url 'chercheurDoc_liste' %}" class="mb-4">
+      <div class="row justify-content-center">
+        <div class="col-md-auto">
+          <div class="form-group mb-0">
+            <label for="search_name" class="sr-only">Nom ou Prénom du Doctorant :</label>
+            <input type="text" name="search_name" id="search_name" class="form-control" placeholder="Nom ou Prénom" value="{{ search_name }}">
+            <small class="form-text text-muted ">Doctorant</small>
+          </div>
+        </div>
+
+        <div class="col-md-auto">
+          <div class="form-group mb-0">
+            <label for="encadrant_name" class="sr-only">Nom ou Prénom de l'Encadrant :</label>
+            <input type="text" name="encadrant_name" id="encadrant_name" class="form-control" placeholder="Encadrant" value="{{ encadrant_name }}">
+            <small class="form-text text-muted">Encadrant</small>
+          </div>
+        </div>
+    
+    
+        <div class="col-md-auto">
+          <div class="form-group mb-0">
+            <label for="annee_inscription" class="sr-only">Année d'Inscription :</label>
+            <select name="annee_inscription" id="annee_inscription" class="form-control">
+              <option value="">Tous</option>
+              {% for year in years_range %}
+                <option value="{{ year }}" {% if year == annee_inscription %}selected{% endif %}>{{ year }}</option>
+              {% endfor %}
+            </select>
+            <small class="form-text text-muted">Inscription</small>
+          </div>
+        </div>
+    
+        <div class="col-md-auto">
+          <div class="form-group mb-0">
+            <label for="date_soutenance" class="sr-only">Année de Soutenance :</label>
+            <select name="date_soutenance" id="date_soutenance" class="form-control">
+              <option value="">Tous</option>
+              {% for year in years_range %}
+                <option value="{{ year }}" {% if year == date_soutenance %}selected{% endif %}>{{ year }}</option>
+              {% endfor %}
+            </select>
+            <small class="form-text text-muted">Soutenance</small>
+          </div>
+        </div>
+    
+        
+        <div class="col-md-auto">
+          <button type="submit" class="btn btn-primary btn-block">Rechercher</button>
+        </div>
+      </div>
+    </form>
+    
+
+    <div class="row">
+      {% for chercheur in page_obj %}
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 border-0 shadow chercheur-card">
+            <img src="{{ chercheur.photo.url }}" class="card-img-top" alt="{{ chercheur.nom }} {{ chercheur.prenom }}">
+            <div class="card-body">
+              <h5 class="card-title">{{ chercheur.nom }} {{ chercheur.prenom }}</h5>
+              <p class="card-text">Email: {{ chercheur.email }}</p>
+              <p class="card-text">Date d'inscription: {{ chercheur.annee_inscription }}</p>
+              <p class="card-text">Date de soutenance: {{ chercheur.date_soutenance }}</p>
+              <p class="card-text">Encadrant: {{ chercheur.encadrant }}</p>
+              <a href="{% url 'chercheur_detail' chercheur.id %}" class="btn btn-primary btn-sm btn-voir-profil">Voir le profil</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <nav aria-label="Pagination">
+      <ul class="pagination justify-content-center mt-4">
+        {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.search_name %}&search_name={{ request.GET.search_name }}{% endif %}{% if request.GET.annee_inscription %}&annee_inscription={{ request.GET.annee_inscription }}{% endif %}{% if request.GET.date_soutenance %}&date_soutenance={{ request.GET.date_soutenance }}{% endif %}{% if request.GET.encadrant_name %}&encadrant_name={{ request.GET.encadrant_name }}{% endif %}" aria-label="Page précédente">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">Page précédente</span>
+            </a>
+          </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <li class="page-item active" aria-current="page">
+              <a class="page-link" href="?page={{ num }}{% if request.GET.search_name %}&search_name={{ request.GET.search_name }}{% endif %}{% if request.GET.annee_inscription %}&annee_inscription={{ request.GET.annee_inscription }}{% endif %}{% if request.GET.date_soutenance %}&date_soutenance={{ request.GET.date_soutenance }}{% endif %}{% if request.GET.encadrant_name %}&encadrant_name={{ request.GET.encadrant_name }}{% endif %}">{{ num }}</a>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ num }}{% if request.GET.search_name %}&search_name={{ request.GET.search_name }}{% endif %}{% if request.GET.annee_inscription %}&annee_inscription={{ request.GET.annee_inscription }}{% endif %}{% if request.GET.date_soutenance %}&date_soutenance={{ request.GET.date_soutenance }}{% endif %}{% if request.GET.encadrant_name %}&encadrant_name={{ request.GET.encadrant_name }}{% endif %}">{{ num }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.search_name %}&search_name={{ request.GET.search_name }}{% endif %}{% if request.GET.annee_inscription %}&annee_inscription={{ request.GET.annee_inscription }}{% endif %}{% if request.GET.date_soutenance %}&date_soutenance={{ request.GET.date_soutenance }}{% endif %}{% if request.GET.encadrant_name %}&encadrant_name={{ request.GET.encadrant_name }}{% endif %}" aria-label="Page suivante">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="sr-only">Page suivante</span>
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+</section>
+{% endblock %}
+
+{% block styles %}
+<style>
+  .chercheur-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+
+  .chercheur-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .chercheur-card .card-img-top {
+    border-radius: 50%;
+    object-fit: cover;
+    width: 100px;
+    height: 100px;
+  }
+
+  .chercheur-card .card-body {
+    padding: 1.5rem;
+  }
+
+  .chercheur-card .card-title {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+
+  .chercheur-card .card-text {
+    color: #777;
+  }
+
+  .chercheur-card .btn-voir-profil {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .chercheur-card .btn-voir-profil:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+
+  .form-group label {
+    font-weight: bold;
+  }
+
+  .form-control {
+    height: 50px;
+    border-radius: 4px;
+  }
+
+  .form-control:focus {
+    box-shadow: none;
+  }
+
+  .btn-primary {
+    height: 50px;
+    border-radius: 4px;
+    padding: 0 30px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+{% endblock %}

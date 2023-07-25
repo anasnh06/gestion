@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 mx-auto">
+          <h1 class="mb-4">{{ chercheur.nom }} {{ chercheur.prenom }}</h1>
+          <div class="d-flex mb-4 align-items-center">
+            <img src="{{ chercheur.photo.url }}" alt="{{ chercheur }}" class="rounded-circle me-4" width="100" height="100">
+            <div>
+              <p class="mb-0">
+                {% if chercheur.grade %}
+                {{ chercheur.grade }}
+                {% else %}
+                  doctorant
+                {% endif %}
+              </p>
+              {% if chercheur.equipe %}
+                <p class="mb-0"><a href="{% url 'equipe_detail' chercheur.equipe.id %}">{{ chercheur.equipe }}</a></p>
+              {% endif %}
+              {% if chercheur.equipe.labo %}
+                <p class="mb-0"><a href="{% url 'laboratoire_detail' chercheur.equipe.labo.id %}">{{  chercheur.equipe.labo }}</a></p>
+              {% endif %}
+              <p class="mb-0">{{ chercheur.email }}</p>
+            </div>
+          </div>
+          <p>{{ chercheur.information }}</p>
+
+          {% if chercheur.encadrant %}
+            <div class="card my-4">
+              <div class="card-header">
+                Encadré par:
+              </div>
+              <div class="card-body">
+                  <h5 class="card-title">
+                    <a href="{% url 'chercheurEns_detail' chercheur.encadrant.id %}">{{ chercheur.encadrant }}</a>
+                  </h5>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if chercheur.co_encadrant %}
+            <div class="card my-4">
+              <div class="card-header">
+                Co-Encadré par:
+              </div>
+              <div class="card-body">
+                  <h5 class="card-title">
+                    <a href="{% url 'chercheurEns_detail' chercheur.co_encadrant.id %}">{{ chercheur.co_encadrant }}</a>
+                  </h5>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if chercheur.date_soutenance %}
+            <div class="card my-4">
+              <div class="card-header">
+                Date de soutenance du thèse :
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">{{ chercheur.date_soutenance }}</h5>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if chercheur.annee_inscription %}
+            <div class="card my-4">
+              <div class="card-header">
+                Inscrit en thèse en:
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">{{ chercheur.annee_inscription }}</h5>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if chercheur.these %}
+            <div class="card my-4">
+              <div class="card-header">
+                Thèse en:
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">{{ chercheur.these }}</h5>
+              </div>
+            </div>
+          {% endif %}
+
+          
+
+          {% if chercheur.respo.all %}
+            <div class="card my-4" style="max-height: 300px; overflow-y: scroll;">
+              <div class="card-header">
+                Responsable de {{ chercheur.respo.all|length }} équipe(s) :
+              </div>
+              <ul class="list-group list-group-flush">
+                {% for equipe in chercheur.respo.all %}
+                  <li class="list-group-item"><a href="{% url 'equipe_detail' equipe.id %}">{{ equipe }}</a></li>
+                {% empty %}
+                  <li class="list-group-item">Aucune équipe trouvée.</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
+          {% if equipe.equipe_activite.all %}
+            <div class="card my-4" style="max-height: 300px; overflow-y: scroll;">
+              <div class="card-header">
+                Participer au {{ equipe.equipe_activite.all|length }} activités :
+              </div>
+              <ul class="list-group list-group-flush">
+                {% for activite in equipe.equipe_activite.all %}
+                  <li class="list-group-item">
+                    <a href="{% url 'activite_detail' activite.id %}">
+                      <span class="font-weight-bold">{{ activite }} --- {{ activite.intitule }}</span> ({{ activite.genre }})
+                    </a>
+                  </li>
+                {% empty %}
+                  <li class="list-group-item">Aucune activité trouvée.</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
+          {% if equipe.equipe_production.all %}
+            <div class="card my-4" style="max-height: 300px; overflow-y: scroll;">
+              <div class="card-header">
+                Productions de l'équipe :
+              </div>
+              <ul class="list-group list-group-flush">
+                {% for production in equipe.equipe_production.all %}
+                  <li class="list-group-item">
+                    <a href="{% url 'production_detail' production.id %}">
+                      <span class="font-weight-bold">{{ production.libelle }}</span> ({{ production.type_publication }})
+                    </a>
+                  </li>
+                {% empty %}
+                  <li class="list-group-item">Aucune production trouvée.</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
+          {% if chercheur.auteur_production.all %}
+            <div class="card my-4" style="max-height: 300px; overflow-y: scroll;">
+              <div class="card-header">
+                Publications de {{ chercheur }} :
+              </div>
+              <ul class="list-group list-group-flush">
+                {% for publication in chercheur.auteur_production.all %}
+                  <li class="list-group-item">
+                    <a href="{% url 'production_detail' publication.id %}">
+                      <span class="font-weight-bold">{{ publication.libelle }}</span> ({{ publication.type_publication }})
+                    </a>
+                  </li>
+                {% empty %}
+                  <li class="list-group-item">Aucune publication trouvée.</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
+          {% if chercheur.encadrant_doctorant.all %}
+            <div class="card my-4" style="max-height: 300px; overflow-y: scroll;">
+              <div class="card-header">
+                Encadrement de {{ chercheur.encadrant_doctorant.all |length }} doctorant(s) :
+              </div>
+              <ul class="list-group list-group-flush">
+                {% for doctorant in chercheur.encadrant_doctorant.all %}
+                  <li class="list-group-item">
+                    <a href="{% url 'chercheurDoc_detail' doctorant.id %}">
+                      <span class="font-weight-bold">{{ doctorant }}</span> ({{ doctorant.annee_inscription }} - {{ doctorant.date_soutenance }})
+                    </a>
+                  </li>
+                {% empty %}
+                  <li class="list-group-item">Aucun doctorant encadré.</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
+          {% if chercheur.co_encadrant_doctorant.all %}
+            <div class="card my-4" style="max-height: 300px; overflow-y: scroll;">
+              <div class="card-header">
+                Co-encadrement de {{ chercheur.co_encadrant_doctorant.all|length }} doctorant(s) :
+              </div>
+              <ul class="list-group list-group-flush">
+                {% for doctorant in chercheur.co_encadrant_doctorant.all %}
+                  <li class="list-group-item">
+                    <a href="{% url 'chercheurDoc_detail' doctorant.id %}">
+                      <span class="font-weight-bold">{{ doctorant }}</span> ({{ doctorant.annee_inscription }} - {{ doctorant.date_soutenance }})
+                    </a>
+                  </li>
+                {% empty %}
+                  <li class="list-group-item">Aucun doctorant co-encadré.</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

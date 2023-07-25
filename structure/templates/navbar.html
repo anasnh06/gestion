@@ -1,0 +1,89 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top box">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <i class="fas fa-house" ></i>ACCUEIL</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'laboratoire_liste' %}">
+            <i class="fas fa-building "></i> Laboratoires
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'equipe_liste' %}">
+            <i class="fas fa-users"></i> Équipes
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-user"></i> Chercheurs
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{% url 'chercheurEns_liste' %}">Enseignants</a></li>
+            <li><a class="dropdown-item" href="{% url 'chercheurDoc_liste' %}">Doctorants</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'encadrement_liste' %}">
+            <i class="fas fa-chalkboard-teacher"></i> Encadrements
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'production_liste' %}">
+            <i class="fa fa-file-alt"></i> Productions
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'activite_liste' %}">
+            <i class="fas fa-chart-bar"></i> Activités
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'about' %}">
+            <i class="fas fa-info-circle"></i> À propos
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'administration' %}">
+            <i class="fa fa-sign-in-alt"></i> Se Connecter
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<style>
+  .box {
+    padding: 12px 0;
+    box-shadow: 0 0 20px rgba(235, 14, 14, 0.5);
+    animation: color-change 60s infinite;
+  }
+
+  @keyframes color-change {
+    0%, 16.67% {
+      box-shadow: 0 0 20px rgb(9, 9, 255);
+    }
+    16.67%, 33.33% {
+      box-shadow: 0 0 20px rgba(68, 7, 224, 0.5);
+    }
+    33.33%, 50% {
+      box-shadow: 0 20px 20px rgb(0, 0, 0);
+    }
+    50%, 66.67% {
+      box-shadow: 0 0 20px rgba(9, 3, 42, 0.5);
+    }
+    66.67%, 83.33% {
+      box-shadow: 0 0 20px rgb(0, 147, 0);
+    }
+    83.33%, 100% {
+      box-shadow: 0 0 20px rgb(18, 247, 18);
+    }
+  }
+</style>

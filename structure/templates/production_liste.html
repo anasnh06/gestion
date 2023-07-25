@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <div class="row justify-content-center mb-5">
+        <div class="col-md-8 text-center">
+          <hr>
+          <h1 class="display-4 font-weight-bold text mb-4">Productions scientifiques</h1>
+          <hr>
+        </div>
+      </div>
+
+      <form method="GET" action="{% url 'production_liste' %}">
+        <div class="form-group row">
+          <label for="type_publication" class="col-sm-3 col-form-label">Type de publication :</label>
+          <div class="col-sm-6">
+            <select name="type_publication" id="type_publication" class="form-control">
+              <option value="">Tous les types</option>
+              <option value="Article">Article scientifique</option>
+              <option value="Actes">Actes de congrès</option>
+              <option value="Communication">Communication orale</option>
+              <option value="Ouvrage">Ouvrage de recherche</option>
+            </select>
+          </div>
+          <div class="col-sm-3">
+            <button type="submit" class="btn btn-primary">Filtrer</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="list-group" id="production_liste">
+        {% for production in productions %}
+          <a href="{% url 'production_detail' production.id %}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h3 class="mb-1">{{ production.libelle }}</h3>
+              <small>{{ production.date_publication | date:"d/m/Y" }}</small>
+            </div>
+            <p class="mb-1"><strong>Type de publication :</strong> {{ production.type_publication }}</p>
+          </a>
+        {% empty %}
+          <p class="text-center">Aucune production trouvée.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

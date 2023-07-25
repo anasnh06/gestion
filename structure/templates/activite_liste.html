@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <div class="row justify-content-center mb-5">
+        <div class="col-md-8 text-center">
+          <hr>
+          <h1 class="display-4 font-weight-bold text mb-4">Activités scientifiques</h1>
+          <hr>
+        </div>
+      </div>
+
+      <form method="GET" action="{% url 'activite_liste' %}">
+        <div class="form-group row">
+          <label for="type_activite" class="col-sm-3 col-form-label">Type d'activité :</label>
+          <div class="col-sm-6">
+            <select name="type_activite" id="type_activite" class="form-control">
+              <option value="">Tous les types</option>
+              <option value="Projets financés">Projets financés</option>
+              <option value="Manifestations scientifiques">Manifestations scientifiques</option>
+              <option value="Conventions de partenariat">Conventions de partenariat</option>
+              <option value="Expertises et prestations de service">Expertises et prestations de service</option>
+              <option value="Recherche et développement">Recherche et développement</option>
+            </select>
+          </div>
+          <div class="col-sm-3">
+            <button type="submit" class="btn btn-primary">Filtrer</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="list-group" id="activite_liste">
+        {% for activite in activites %}
+          <a href="{% url 'activite_detail' activite.id %}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h3 class="mb-1">{{ activite.libelle }}</h3>
+            </div>
+            <p class="mb-1"><strong>Type d'activité:</strong> {{ activite.type_activite }}</p>
+            <p class="mb-1"><strong>Dates:</strong> {{ activite.date_debut | date:"d/m/Y" }} - {{ activite.date_fin | date:"d/m/Y" }}</p>
+          </a>
+        {% empty %}
+          <p class="text-center">Aucune activité trouvée.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

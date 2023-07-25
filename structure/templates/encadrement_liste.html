@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <div class="row justify-content-center mb-5">
+        <div class="col-md-8 text-center">
+          <h1 class="display-4 font-weight-bold text mb-4">Encadrements scientifiques</h1>
+          <hr>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <form method="GET" action="{% url 'encadrement_liste' %}" class="mb-4">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="filtre_encadrement" class="sr-only">Filtrer par :</label>
+                  <select name="filtre_encadrement" id="filtre_encadrement" class="form-control">
+                    <option value="">Tous</option>
+                    <option value="encadrement" {% if request.GET.filtre_encadrement == 'encadrement' %}selected{% endif %}>Encadrement</option>
+                    <option value="coencadrement" {% if request.GET.filtre_encadrement == 'coencadrement' %}selected{% endif %}>Co-encadrement</option>
+                  </select>
+                  <small class="form-text text-muted">type d'encadrement</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="filtre_encadrant" class="sr-only">Encadrant :</label>
+                  <select name="filtre_encadrant" id="filtre_encadrant" class="form-control">
+                    <option value="">Tous</option>
+                    {% for encadrant in encadrants %}
+                      <option value="{{ encadrant.id }}" {% if request.GET.filtre_encadrant == encadrant.id %}selected{% endif %}>{{ encadrant }}</option>
+                    {% endfor %}
+                  </select>
+                  <small class="form-text text-muted">Encadrant</small>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <button type="submit" class="btn btn-primary btn-block">Filtrer</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {% for chercheur in these %}
+      <div class="row mb-4">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ chercheur.these }}</h5>
+              <p class="card-text">Doctorant : <a href="{% url 'chercheurDoc_detail' chercheur.id %}">{{ chercheur }}</a></p>
+              <p class="card-text">Encadrant : <a href="{% url 'chercheurEns_detail' chercheur.encadrant.id %}">{{ chercheur.encadrant }}</a></p>
+              {% if chercheur.co_encadrant %}
+                <p class="card-text">Co-encadrant : <a href="{% url 'chercheurEns_detail' chercheur.co_encadrant.id %}">{{ chercheur.co_encadrant }}</a></p>
+                <p class="card-text">Type : Co-encadrement</p>
+              {% else %}
+                <p class="card-text">Type : Encadrement</p>
+              {% endif %}
+              <p class="card-text">Date de soutenance : {{ chercheur.date_soutenance }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="row">
+        <div class="col-md-12">
+          <p class="text-center">Aucune thèse trouvée.</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}

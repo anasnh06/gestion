@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<section class="py-5">
+  <main class="container">
+    <div class="row justify-content-center mb-5">
+      <div class="col-md-8 text-center">
+        <hr>
+        <h1 class="display-4 font-weight-bold text mb-4">Équipes de recherche</h1>
+        <hr>
+      </div>
+    </div>
+    <div class="row">
+      {% for equipe in equipes %}
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card h-100 shadow">
+            <img class="card-img-top" src="{{ equipe.photo.url }}" alt="{{ equipe }}" width="100%" height="225">
+            <div class="card-body">
+              <h4 class="card-title text-center">{{ equipe }}</h4>
+              <h6 class="card-title text-center">{{ equipe.intitule }}</h6>
+              <p class="card-text text-center">{{ equipe.respo }}</p>
+              <div class="text-center">
+                <a href="{% url 'equipe_detail' equipe.id %}" class="btn btn-primary btn-sm mr-2">Voir</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col">
+          <p class="lead">Aucune équipe trouvée.</p>
+        </div>
+      {% endfor %}
+    </div>
+    <hr>
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            {% if equipes.has_previous %}
+              <li class="page-item"><a class="page-link" href="?page=1">&laquo;</a></li>
+              <li class="page-item"><a class="page-link" href="?page={{ equipes.previous_page_number }}">&lsaquo;</a></li>
+            {% else %}
+              <li class="page-item disabled"><a class="page-link" href="#">&laquo;</a></li>
+              <li class="page-item disabled"><a class="page-link" href="#">&lsaquo;</a></li>
+            {% endif %}
+            {% for i in equipes.paginator.page_range %}
+              {% if equipes.number == i %}
+                <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+              {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if equipes.has_next %}
+              <li class="page-item"><a class="page-link" href="?page={{ equipes.next_page_number }}">&rsaquo;</a></li>
+              <li class="page-item"><a class="page-link" href="?page={{ equipes.paginator.num_pages }}">&raquo;</a></li>
+            {% else %}
+              <li class="page-item disabled"><a class="page-link" href="#">&rsaquo;</a></li>
+              <li class="page-item disabled"><a class="page-link" href="#">&raquo;</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <hr>
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+          <form action="{% url 'equipe_liste' %}" method="get" class="custom-form">
+            <div class="input-group">
+                <input type="text" class="form-control" name="recherche" placeholder="Nom Equipe" value="{{ request.GET.recherche }}">
+                <div class="input-group-append">
+                  <button class="btn btn-custom" type="submit"><i class="fas fa-search"></i> Rechercher</button>
+                </div>
+              </div>
+            <div class="form-group mt-3">
+              Responsable {{ form.respo }}
+            </div>
+          </form>
+        </div>
+      </div>
+      <hr>
+    </main>
+
+</section>
+  
+  {% endblock %}
+  
+  
+  {% block styles %}
+    <style>
+      .card {
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease-in-out;
+      }
+  
+      .card:hover {
+        transform: translateY(-10px);
+      }
+  
+      .card-img-top {
+        height: 225px;
+        object-fit: cover;
+        object-position: center;
+      }
+  
+      .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+  
+      .card-text {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+      }
+  
+      .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        transition: background-color 0.2s ease-in-out;
+      }
+  
+      .btn-primary:hover {
+        background-color: #0062cc;
+        border-color: #0062cc;
+      }
+  
+      .btn-primary:active, .btn-primary:focus {
+        box-shadow: none;
+      }
+  
+      
+  
+      
+  
+      .card-deck {
+        margin-bottom: 3rem;
+      }
+  
+      .card-deck .card {
+        margin-bottom: 2rem;
+      }
+  
+      @media (min-width: 992px) {
+        .card-deck {
+          display: flex;
+          flex-wrap: wrap;
+          margin-right: -15px;
+          margin-left: -15px;
+        }
+  
+        .card-deck .card {
+          flex: 1 0 33.333%;
+          margin-right: 15px;
+          margin-bottom: 0;
+          margin-left: 15px;
+        }
+      }
+  
+      .custom-form {
+        background-color: #f8f9fa;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+      }
+  
+      .custom-form input[type="text"] {
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 16px;
+        color: #495057;
+        background-color: #e9ecef;
+        transition: background-color 0.2s ease-in-out;
+      }
+  
+      .custom-form input[type="text"]:focus {
+        background-color: #d3d9df;
+        outline: none;
+      }
+  
+      .custom-form button[type="submit"] {
+        border: none;
+        background-color: transparent;
+        color: #007bff;
+        font-size: 18px;
+        transition: color 0.2s ease-in-out;
+      }
+  
+      .custom-form button[type="submit"]:hover {
+        color: #0062cc;
+        cursor: pointer;
+      }
+  
+      .btn-custom {
+        background-color: #007bff;
+        border-color: #007bff;
+        border-radius: 5px;
+        padding: 10px 15px;
+        transition: background-color 0.2s ease-in-out;
+      }
+  
+      .btn-custom:hover {
+        background-color: #0062cc;
+        border-color: #0062cc;
+      }
+  
+      .btn-custom:active, .btn-custom:focus {
+        box-shadow: none;
+      }
+  
+      .fa-search {
+        font-size: 18px;
+        margin-right: 5px;
+        color: #ffffff;
+      }
+    </style>
+  {% endblock %}
